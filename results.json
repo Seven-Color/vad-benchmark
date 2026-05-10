@@ -1,0 +1,50 @@
+[
+  {
+    "method": "Silero VAD",
+    "model_type": "torch",
+    "speech_segments": 19,
+    "speech_duration_s": 48.4,
+    "audio_file": "C:\\Users\\wuxiukun\\.openclaw\\workspace-codex\\vad_benchmark\\silero-vad\\tests\\data\\test.wav",
+    "audio_label": "clean"
+  },
+  {
+    "method": "WebRTC VAD",
+    "model_type": "c-extension",
+    "speech_segments": 29,
+    "speech_duration_s": 51.45,
+    "audio_file": "C:\\Users\\wuxiukun\\.openclaw\\workspace-codex\\vad_benchmark\\silero-vad\\tests\\data\\test.wav",
+    "audio_label": "clean"
+  },
+  {
+    "method": "nicklashansen VAD",
+    "model_type": "energy-proxy",
+    "speech_segments": 110,
+    "speech_duration_s": 11.66,
+    "audio_file": "C:\\Users\\wuxiukun\\.openclaw\\workspace-codex\\vad_benchmark\\silero-vad\\tests\\data\\test.wav",
+    "audio_label": "clean"
+  },
+  {
+    "method": "Silero VAD",
+    "model_type": "torch",
+    "speech_segments": 23,
+    "speech_duration_s": 45.9,
+    "audio_file": "C:\\Users\\wuxiukun\\.openclaw\\workspace-codex\\vad_benchmark\\silero-vad\\tests\\data\\noisy_test.wav",
+    "audio_label": "noisy"
+  },
+  {
+    "method": "WebRTC VAD",
+    "model_type": "c-extension",
+    "speech_segments": 1,
+    "speech_duration_s": 60.0,
+    "audio_file": "C:\\Users\\wuxiukun\\.openclaw\\workspace-codex\\vad_benchmark\\silero-vad\\tests\\data\\noisy_test.wav",
+    "audio_label": "noisy"
+  },
+  {
+    "method": "nicklashansen VAD",
+    "model_type": "energy-proxy",
+    "speech_segments": 110,
+    "speech_duration_s": 9.96,
+    "audio_file": "C:\\Users\\wuxiukun\\.openclaw\\workspace-codex\\vad_benchmark\\silero-vad\\tests\\data\\noisy_test.wav",
+    "audio_label": "noisy"
+  }
+]
