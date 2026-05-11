@@ -1,0 +1,21 @@
+# Large generated test data (regenerate via generate_synthetic_data.py)
+test_labeled/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Results (regenerate via benchmark.py)
+results.json
+roc_curves.png
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Virtual environments
+venv/
+env/
+.venv/

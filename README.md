@@ -8,45 +8,62 @@
 |------|------|------|
 | **Silero VAD** | [snakers4/silero-vad](https://github.com/snakers4/silero-vad) | PyTorch/ONNX，6000+语言，支持 8k/16kHz |
 | **WebRTC VAD** | [dpirch/libfvad](https://github.com/dpirch/libfvad) | C 语言实现，WebRTC 原生引擎 |
-| **nicklashansen VAD** | [nicklashansen/voice-activity-detection](https://github.com/nicklashansen/voice-activity-detection) | DenseNet/GRU 深度学习模型 |
+| **Energy VAD** | 本项目 | 基于能量阈值 + 带通滤波，简单基线 |
+
+## 快速开始
+
+```bash
+# 1. 安装依赖
+pip install torch torchaudio soundfile scipy numpy webrtcvad
+
+# 2. 生成带标注的测试数据（合成语音+噪声，10个条件）
+python generate_synthetic_data.py
+
+# 3. 运行基准测试
+python benchmark.py
+```
+
+**输出：** `results.json`（详细指标）+ `roc_curves.png`（ROC曲线）
+
+## 数据说明
+
+测试数据通过 `generate_synthetic_data.py` 自动生成，共 **6个基础样本 × 10个条件 = 60个文件**：
+
+- **1 个 clean 条件**：纯语音，无噪声
+- **3 种噪声类型** × **3 个 SNR 级别** = 9 个 noisy 条件
+  - 噪声：pink（粉噪）、hospital（医院环境噪声）、white（白噪声）
+  - SNR：0dB、-5dB、-10dB
+
+每个样本 30 秒语音，frame 级别（10ms）二值标注（1=语音，0=非语音）。
+
+标签格式：
+```json
+{
+  "source": "synthetic",
+  "sample_rate": 16000,
+  "frame_ms": 10,
+  "labels": [0, 1, 1, 0, ...],
+  "segments": [{"start": 0.5, "end": 2.3}, ...],
+  "noise_type": "pink",
+  "snr_db": -5.0
+}
+```
 
 ## 目录结构
 
 ```
 vad_benchmark/
-├── silero-vad/              # Silero VAD（已克隆，含测试音频）
-├── libfvad/                 # WebRTC VAD
-├── nicklashansen_vad/       # nicklashansen VAD
-├── test_audio/             # 测试音频文件
-│   ├── clean_test.wav      # 原始干净音频
-│   └── noisy_test.wav      # 加噪测试音频（SNR~-8dB）
-└── benchmark.py            # 统一评测脚本
+├── generate_synthetic_data.py   # 生成带标注的测试数据
+├── benchmark.py                  # 统一评测脚本
+├── silero-vad/                   # Silero VAD
+├── libfvad/                      # WebRTC VAD
+├── test_labeled/                 # 生成的测试数据（gitignore）
+└── test_audio/                   # 旧版测试音频
 ```
 
-## 安装依赖
+## 评测指标
 
-```bash
-pip install torch torchaudio soundfile scipy numpy
-```
-
-## 运行测试
-
-```bash
-python benchmark.py
-```
-
-输出：`results.json`（各模型在 clean/noisy 音频上的检测结果）。
-
-## 测试音频说明
-
-- `clean_test.wav` — 来自 silero-vad 原始测试音频，60 秒 16kHz
-- `noisy_test.wav` — 叠加高斯噪声（SNR ≈ -8dB），用于评估噪声鲁棒性
-
-## 结果解读
-
-`results.json` 字段：
-- `method` — VAD 方法名称
-- `model_type` — 模型类型（torch/onnx/c）
-- `speech_segments` — 检测到的语音片段数
-- `speech_duration_s` — 总语音时长（秒）
-- `audio_file` — 测试音频路径
+- **Accuracy**：帧级准确率
+- **Precision / Recall**：查准率 / 查全率
+- **F1**：Precision 和 Recall 的调和平均
+- **AUC**：ROC 曲线下面积（Silero 和 Energy VAD 提供概率分数）
